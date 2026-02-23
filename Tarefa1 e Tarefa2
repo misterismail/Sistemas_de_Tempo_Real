@@ -1,0 +1,44 @@
+#include <Arduino.h>
+static const int led_pin = 18;
+bool led_state = false;
+unsigned long last = 0;
+unsigned long lastPrint = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  Serial.println("Hello, ESP32!");
+  pinMode(led_pin, OUTPUT);
+}
+// Tarefa 1 - Led que pisca e pisca
+void blink_led() {
+  // put your main code here, to run repeatedly:
+  unsigned long now = millis();
+  if(now-last>=500){
+  if (led_state == false)
+  {
+    digitalWrite(led_pin, HIGH);
+    led_state = true;
+  }
+  else {
+    digitalWrite(led_pin, LOW);
+    led_state = false;
+    Serial.printf("[millis] periodo = %lu ms\n", (now - last));
+    last = now;
+  }
+  }
+}
+void processa_qualquer_coisa()
+{
+  unsigned long temp0 = micros();
+  for(volatile int i=0;i< 50;i++){}
+  unsigned long temp1 = micros() -temp0;
+
+  if(millis() - lastPrint >= 2000){
+  lastPrint = millis();
+  Serial.printf("[micros] periodo = %lu ms\n", temp1);
+}}
+void loop() {
+  blink_led();
+  processa_qualquer_coisa();
+}
